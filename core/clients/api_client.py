@@ -109,7 +109,7 @@ class APIClient:
     def get_booking_by_id(self, booking_id):
         with allure.step(f'Getting booking by ID: {Users.BOOKING_ID}'):
             # Собираем адрес url
-            url = f"{self.base_url}{Endpoints.BOOKING_ENDPOINT}/{booking_id}"
+            url = f"{self.base_url}{Endpoints.BOOKING_ENDPOINT}/:{booking_id}"
             # Посылаем GET-запрос и ждем выполнения 5 сек
             response = self.session.get(url, timeout=Timeouts.TIMEOUT)
             # Проверяем, что в ответе нет HTTP-ошибки
