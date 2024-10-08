@@ -86,7 +86,7 @@ class APIClient:
         return response.status_code
 
     # Метод аутентификации пользователя
-    def auth(self):
+    def auth_old(self):
         with allure.step('Getting autheticate'):
             # Собираем адрес url
             url = f"{self.base_url}{AUTH_ENDPOINT}"
@@ -104,6 +104,19 @@ class APIClient:
         with allure.step('Updating header with authorization'):
             #Добавляем заголовок в сессию
             self.session.headers.update({"Authorization": f"Bearer {token}"})
+
+    def auth(self):
+        with allure.step('Getting authenticate'):
+            url = f"{self.base_url}{Endpoints.AUTH_ENDPOINT.value}"
+            payload = {"username": Users.USERNAME.value, "password": Users.PASSWORD.value}
+            response = self.session.post(url, json=payload, timeout=Timeouts.TIMEOUT.value)
+            response.raise_for_status()
+        with allure.step('Checking status code'):
+            assert response.status_code == 200, f"Expected status 200 but got {response.status_code}"
+        token = response.json().get("token")
+        with allure.step('Updating header with authorization'):
+            #Добавляем в заголовок Cookie полученное значение токена
+            self.session.headers.update({"Cookie": f"token={token}"})
 
     # Метод получения брони по ID пользователя
     def get_booking_by_id(self, booking_id):
