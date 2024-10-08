@@ -18,6 +18,7 @@ from core.settings.configgit  import Users, Timeouts
 load_dotenv()
 
 class APIClient:
+    # Инициализация переменных для кода
     def __init__(self):
         # В переменную environment_str кладем значение переменной ENVIRONMENT
         # Значение переменной ENVIRONMENT берется из настроек:
@@ -71,7 +72,7 @@ class APIClient:
             assert response.status_code == status_code
         return response.json()
 
-    # Тест на проверку работоспсобности API - Health Check
+    # Метод на проверку работоспособности API - Health Check
     def ping(self):
         with allure.step('Ping api client'):
             # Собираем запрос
@@ -84,6 +85,7 @@ class APIClient:
             assert response.status_code == 201, f'Expected status 201 but got {response.status_code}'
         return response.status_code
 
+    # Метод аутентификации пользователя
     def auth(self):
         with allure.step('Getting autheticate'):
             # Собираем адрес url
@@ -103,10 +105,11 @@ class APIClient:
             #Добавляем заголовок в сессию
             self.session.headers.update({"Authorization": f"Bearer {token}"})
 
-    def get_booking_by_id(self):
+    # Метод получения брони по ID пользователя
+    def get_booking_by_id(self, booking_id):
         with allure.step(f'Getting booking by ID: {Users.BOOKING_ID}'):
             # Собираем адрес url
-            url = f"{self.base_url}{Endpoints.BOOKING_ENDPOINT}/{Users.BOOKING_ID}"
+            url = f"{self.base_url}{Endpoints.BOOKING_ENDPOINT}/:{booking_id}"
             # Посылаем GET-запрос и ждем выполнения 5 сек
             response = self.session.get(url, timeout=Timeouts.TIMEOUT)
             # Проверяем, что в ответе нет HTTP-ошибки
