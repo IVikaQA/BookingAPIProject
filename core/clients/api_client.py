@@ -166,7 +166,7 @@ class APIClient:
             "firstname": "James",
             "lastname": "Brown",
             "totalprice": 111,
-            "depositpaid": true,
+            "depositpaid": True,
             "bookingdates":
                 {
                     "checkin": "2018-01-01",
