@@ -1,7 +1,4 @@
-# Для работы с запросами
-from http.client import responses
-from threading import TIMEOUT_MAX
-
+#Для работы с файлами
 import requests
 # Для работы с файлами
 import os
@@ -10,16 +7,13 @@ import os
 # Эта библиотека позволяет загружать переменные окружения
 # из файла .envlesson1 в среду выполнения Python.
 from dotenv import load_dotenv
-from requests.auth import HTTPBasicAuth
-
-from core.settings.environments_lesson1 import Environment
+from core.settings.environments import Environment
 import allure
-from core.clients.endpoints_lesson2 import Endpoints
-from core.settings.config_lesson2 import Users, Timeouts
+from core.clients.endpoints import Endpoints
+from core.settings.config import Users, Timeouts
 from requests.auth import HTTPBasicAuth
 
 load_dotenv()
-
 
 class APIClient:
     def __init__(self):
@@ -93,7 +87,7 @@ class APIClient:
     def auth(self):
         with allure.step('Getting autheticate'):
             # Собираем адрес url
-            url = f"{self.base_url}{AUTH_ENDPOINT}"
+            url = f"{self.base_url}{Endpoints.AUTH_ENDPOINT}"
             # Собираем тело для post-запроса
             payload = {"username": Users.USERNAME, "password": Users.PASSWORD}
             # Посылаем запрос с и ждем выполнения 5 сек
