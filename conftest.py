@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from core.clients.api_client import APIClient
+from core.clients.api_client_lesson3 import APIClient
 import pytest
 from faker import Faker
 import random
@@ -34,16 +34,28 @@ def booking_dates():
 # Фикстура генерации случайных данных клиента
 @pytest.fixture()
 def generate_random_booking_data(booking_dates):
-    # Генерация ФИО на китайском
-    faker = Faker('zh_CN')
-    firstname = faker.first_name()
-    lastname = faker.last_name()
+    # Генерация ФИО на китайском. Это клиент-1.
+    faker_zh = Faker('zh_CN')
+    firstname_zh = faker_zh.first_name()
+    lastname_zh = faker_zh.last_name()
     # Значение переменной totalprice - это три цифры,
     # fix_len=True - это значит,что число будет иметь фиксированную длину, равную `digits`
-    totalprice = faker.random_number(digits=3, fix_len=True)
-    depositpaid = faker.boolean()
+    totalprice_zh = faker_zh.random_number(digits=3, fix_len=True)
+    depositpaid_zh = faker_zh.boolean()
     # Переменная additionalneeds будет содержать слова из списка
-    additionalneeds = faker.sentence()
+    additionalneeds_zh = faker_zh.sentence()
+
+    # Генерация ФИО на английском. Это клиент-2.
+    faker_en = Faker('en_US')
+    firstname_en = faker_en.first_name()
+    lastname_en = faker_en.last_name()
+    # Значение переменной totalprice - это три цифры,
+    # fix_len=True - это значит,что число будет иметь фиксированную длину, равную `digits`
+    totalprice_en = faker_zh.random_number(digits=3, fix_len=True)
+    depositpaid_en = faker_en.boolean()
+    # Переменная additionalneeds будет содержать слова из списка
+    additionalneeds_en = faker_en.sentence()
+
     custom_words = ["кот", "собака", "птица", "рыба", "мышь", "попугай"]
     # Генерируем случайное предложение из кастомных слов
     # Длина предложения от 1 до 3 слов
