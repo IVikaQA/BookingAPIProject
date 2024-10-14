@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from core.clients.api_client_lesson3 import APIClient
+from core.clients.api_client import APIClient
 import pytest
 from faker import Faker
 import random
@@ -34,42 +34,64 @@ def booking_dates():
 # Фикстура генерации случайных данных клиента
 @pytest.fixture()
 def generate_random_booking_data(booking_dates):
-    # Генерация ФИО на китайском. Это клиент-1.
-    faker_zh = Faker('zh_CN')
-    firstname_zh = faker_zh.first_name()
-    lastname_zh = faker_zh.last_name()
-    # Значение переменной totalprice - это три цифры,
-    # fix_len=True - это значит,что число будет иметь фиксированную длину, равную `digits`
-    totalprice_zh = faker_zh.random_number(digits=3, fix_len=True)
-    depositpaid_zh = faker_zh.boolean()
-    # Переменная additionalneeds будет содержать слова из списка
-    additionalneeds_zh = faker_zh.sentence()
+    #Будут созданы клиенты на русском, английском, китайском
+    list_locale = ['ru_RU', 'en_US', 'zh_CN']
+    faker_ru = Faker(locale='ru_RU')
+    faker_en = Faker(locale='en_US')
+    faker_ch = Faker(locale='zh_CN')
 
-    # Генерация ФИО на английском. Это клиент-2.
-    faker_en = Faker('en_US')
+    # Генерация данных для клиента 1 (русский)
+    firstname_ru = faker_ru.first_name()
+    lastname_ru = faker_ru.last_name()
+    totalprice_ru = faker_ru.random_number(digits=3, fix_len=True)
+    depositpaid_ru = faker_ru.boolean()
+    additionalneeds_ru = faker_ru.sentence()
+
+    # Генерация данных для клиента 2 (китайский)
+    firstname_ch = faker_ch.first_name()
+    lastname_ch = faker_ch.last_name()
+    totalprice_ch = faker_ch.random_number(digits=3, fix_len=True)
+    depositpaid_ch = faker_ch.boolean()
+    additionalneeds_ch = faker_ch.sentence()
+
+    # Генерация данных для клиента 3 (английский)
     firstname_en = faker_en.first_name()
     lastname_en = faker_en.last_name()
-    # Значение переменной totalprice - это три цифры,
-    # fix_len=True - это значит,что число будет иметь фиксированную длину, равную `digits`
-    totalprice_en = faker_zh.random_number(digits=3, fix_len=True)
+    totalprice_en = faker_en.random_number(digits=3, fix_len=True)
     depositpaid_en = faker_en.boolean()
-    # Переменная additionalneeds будет содержать слова из списка
     additionalneeds_en = faker_en.sentence()
 
-    custom_words = ["кот", "собака", "птица", "рыба", "мышь", "попугай"]
-    # Генерируем случайное предложение из кастомных слов
-    # Длина предложения от 1 до 3 слов
+    custom_words = ["cat", "dog", "bird", "fish", "mouse", "parrot"]
     sentence_length = random.randint(1, 3)
     additionalneeds = ' '.join(random.choices(custom_words, k=sentence_length)) + '.'
 
     # Кладем сгенерированные данные в словарь
     data = {
-        "firstname": firstname,
-        "lastname": lastname,
-        "totalprice": totalprice,
-        "depositpaid": depositpaid,
-        "bookingdates": booking_dates,
-        "additionalneeds": additionalneeds
+        "client_1": {
+            "firstname": firstname_ru,
+            "lastname": lastname_ru,
+            "totalprice": totalprice_ru,
+            "depositpaid": depositpaid_ru,
+            "bookingdates": booking_dates,
+            "additionalneeds": additionalneeds,
+        },
+        "client_2": {
+            "firstname": firstname_ch,
+            "lastname": lastname_ch,
+            "totalprice": totalprice_ch,
+            "depositpaid": depositpaid_ch,
+            "bookingdates": booking_dates,
+            "additionalneeds": additionalneeds
+        },
+        "client_3": {
+            "firstname": firstname_en,
+            "lastname": lastname_en,
+            "totalprice": totalprice_en,
+            "depositpaid": depositpaid_en,
+            "bookingdates": booking_dates,
+            "additionalneeds": additionalneeds
+        }
     }
+
     # Возвращаем этот словарь
     return data
