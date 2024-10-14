@@ -1,4 +1,7 @@
-#Для работы с файлами
+# Для работы с запросами
+from http.client import responses
+from threading import TIMEOUT_MAX
+
 import requests
 # Для работы с файлами
 import os
@@ -7,6 +10,8 @@ import os
 # Эта библиотека позволяет загружать переменные окружения
 # из файла .envlesson1 в среду выполнения Python.
 from dotenv import load_dotenv
+from requests.auth import HTTPBasicAuth
+
 from core.settings.environments import Environment
 import allure
 from core.clients.endpoints import Endpoints
@@ -15,7 +20,9 @@ from requests.auth import HTTPBasicAuth
 
 load_dotenv()
 
+
 class APIClient:
+    #Созданиие объекта класса APIClient
     def __init__(self):
         # В переменную environment_str кладем значение переменной ENVIRONMENT
         # Значение переменной ENVIRONMENT берется из настроек:
@@ -105,11 +112,11 @@ class APIClient:
             self.session.headers.update({"Authorization": f"Bearer {token}"})
             self.session.headers.update({"Cookie": f"token={token}"})
 
-    # Метод получения брони по ID пользователя
-    def get_booking_by_id(self, booking_id):
+    #Метод получения брони по ID пользователя
+    def get_booking_by_id(self,booking_id):
         with allure.step(f'Getting booking by ID: {Users.BOOKING_ID}'):
             # Собираем адрес url
-            url = f"{self.base_url}{Endpoints.BOOKING_ENDPOINT}/:{booking_id}"
+            url = f"{self.base_url}{Endpoints.BOOKING_ENDPOINT}/{booking_id}"
             # Посылаем GET-запрос и ждем выполнения 5 сек
             response = self.session.get(url, timeout=Timeouts.TIMEOUT)
             # Проверяем, что в ответе нет HTTP-ошибки
@@ -121,13 +128,13 @@ class APIClient:
         # Возвращаем данные о бронировании
         return response.json()
 
-    # Метод удаления бронирования:API - DeleteBooking
+    #Метод удаления бронирования:API - DeleteBooking
     def delete_booking(self, booking_id):
         with allure.step('Deleting booking'):
             # Собираем адрес url
-            url = f"{self.base_url}{Endpoints.BOOKING_ENDPOINT}/:{booking_id}"
+            url = f"{self.base_url}{Endpoints.BOOKING_ENDPOINT}/{booking_id}"
             # Отправляем запрос: При этом происходит кодироввание логина и пароля в BaseB4,
-            # тем самым добавляется в Authorization Token
+            #тем самым добавляется в Authorization Token
             response = self.session.delete(url, auth=HTTPBasicAuth(Users.USERNAME, Users.PASSWORD))
 
             # Проверяем, что нет HTTP-ошибки
@@ -137,60 +144,22 @@ class APIClient:
             with allure.step('Ckecking status code'):
                 assert response.status_code == 200, f'Expected status 200 but got {response.status_code}'
 
-    # Метод создания бронирования:API - Create Booking
-    def create_booking(self, booking_data):
+    #Метод создания бронирования:API - Create Booking
+    def create_booking(self,booking_data):
         url = f"{self.base_url}{Endpoints.BOOKING_ENDPOINT}"
-        # Передаем в запросе URL и тело (JSON)
-        response = self.session.post(url, json=booking_data)
+        #Передаем в запросе URL и тело (JSON)
+        response = self.session.post(url,json=booking_data)
         response.raise_for_status()
         # Проверяем статус код:Если не 200, то выводим сообщение с кодом ответа
         with allure.step('Ckecking status code'):
             assert response.status_code == 200, f'Expected status 200 but got {response.status_code}'
-        # В ответе возвращаем JSON,который мы будем в тесте по разному проверять.
+        #В ответе возвращаем JSON,который мы будем в тесте по разному проверять.
         return response.json()
 
-    # Метод получения ID-шников броней:API - GetBookingIds
-    def get_booking_ids(self, param=None):
+    #Метод получения ID-шников броней
+    def get_booking_ids(self,param=None):
         url = f"{self.base_url}{Endpoints.BOOKING_ENDPOINT}"
-        response = self.session.get(url, params=param)
-        response.raise_for_status()
-        # Проверяем статус код:Если не 200, то выводим сообщение с кодом ответа
-        with allure.step('Ckecking status code'):
-            assert response.status_code == 200, f'Expected status 200 but got {response.status_code}'
-        # В ответе возвращаем JSON,который мы будем в тесте по разному проверять.
-        return response.json()
-
-    # Метод ПОЛНОГО обновления брони:API - UpdateBooking
-    def fool_update_booking(self, booking_id):
-        payload = {
-            "firstname": "James",
-            "lastname": "Brown",
-            "totalprice": 111,
-            "depositpaid": True,
-            "bookingdates":
-                {
-                    "checkin": "2018-01-01",
-                    "checkout": "2019-01-01"
-                },
-            "additionalneeds": "Breakfast"
-        }
-        url = f"{self.base_url}{Endpoints.BOOKING_ENDPOINT}/:{booking_id}"
-        response = self.session.put(url, params=payload)
-        response.raise_for_status()
-        # Проверяем статус код:Если не 200, то выводим сообщение с кодом ответа
-        with allure.step('Ckecking status code'):
-            assert response.status_code == 200, f'Expected status 200 but got {response.status_code}'
-        # В ответе возвращаем JSON,который мы будем в тесте по разному проверять.
-        return response.json()
-
-    #Метод ЧАСТИЧНОГО обновления брони: API - PartialUpdateBooking
-    def partial_update_booking(self,booking_id):
-        payload = {
-            "firstname": "James",
-            "lastname": "Brown"
-        }
-        url = f"{self.base_url}{Endpoints.BOOKING_ENDPOINT}/:{booking_id}"
-        response = self.session.put(url, params=payload)
+        response = self.session.get(url,params=param)
         response.raise_for_status()
         # Проверяем статус код:Если не 200, то выводим сообщение с кодом ответа
         with allure.step('Ckecking status code'):
