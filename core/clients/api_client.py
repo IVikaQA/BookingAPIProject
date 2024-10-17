@@ -73,7 +73,7 @@ class APIClient:
     def ping(self):
         with allure.step('Ping api client'):
             # Собираем запрос
-            url = f"{self.base_url}{Endpoints.PING_ENDPOINT}"
+            url = f"{self.base_url}{Endpoints.PING_ENDPOINT.value}"
             # Отправляем собранный запрос в текущей сессии
             response = self.session.get(url)
             # Проверяем, что нет HTTP-ошибки
@@ -87,11 +87,11 @@ class APIClient:
     def auth(self):
         with allure.step('Getting autheticate'):
             # Собираем адрес url
-            url = f"{self.base_url}{Endpoints.AUTH_ENDPOINT}"
+            url = f"{self.base_url}{Endpoints.AUTH_ENDPOINT.value}"
             # Собираем тело для post-запроса
-            payload = {"username": Users.USERNAME, "password": Users.PASSWORD}
+            payload = {"username": Users.USERNAME.value, "password": Users.PASSWORD.value}
             # Посылаем запрос с и ждем выполнения 5 сек
-            response = self.session.post(url, json=payload, timeout=Timeouts.TIMEOUT)
+            response = self.session.post(url, json=payload, timeout=Timeouts.TIMEOUT.value)
             # Проверяем что в ответе нет HTTP-ошибки
             response.raise_for_status()
         # Проверяем статус код:Если не 200, то выводим сообщение с кодом ответа
