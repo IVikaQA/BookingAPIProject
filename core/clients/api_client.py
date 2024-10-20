@@ -35,7 +35,7 @@ class APIClient:
             'Content-Type': 'application/json'
         }
 
-    # В функции вытаскиваются значения из файла .envlesson1
+    # В функции вытаскиваются значения из файла .env
     # С помощью записи: -> str говорим о том,что тип возращаемого значения - строка
     def get_base_url(self, environment: Environment) -> str:
         if environment == Environment.TEST:
@@ -109,7 +109,7 @@ class APIClient:
     def get_booking_by_id(self, booking_id):
         with allure.step(f'Getting booking by ID: {Users.BOOKING_ID}'):
             # Собираем адрес url
-            url = f"{self.base_url}{Endpoints.BOOKING_ENDPOINT}/:{booking_id}"
+            url = f"{self.base_url}{Endpoints.BOOKING_ENDPOINT.value}/:{booking_id}"
             # Посылаем GET-запрос и ждем выполнения 5 сек
             response = self.session.get(url, timeout=Timeouts.TIMEOUT)
             # Проверяем, что в ответе нет HTTP-ошибки
@@ -125,7 +125,7 @@ class APIClient:
     def delete_booking(self, booking_id):
         with allure.step('Deleting booking'):
             # Собираем адрес url
-            url = f"{self.base_url}{Endpoints.BOOKING_ENDPOINT}/:{booking_id}"
+            url = f"{self.base_url}{Endpoints.BOOKING_ENDPOINT.value}/:{booking_id}"
             # Отправляем запрос: При этом происходит кодироввание логина и пароля в BaseB4,
             # тем самым добавляется в Authorization Token
             response = self.session.delete(url, auth=HTTPBasicAuth(Users.USERNAME, Users.PASSWORD))
@@ -139,7 +139,7 @@ class APIClient:
 
     # Метод создания бронирования:API - Create Booking
     def create_booking(self, booking_data):
-        url = f"{self.base_url}{Endpoints.BOOKING_ENDPOINT}"
+        url = f"{self.base_url}{Endpoints.BOOKING_ENDPOINT.value}"
         # Передаем в запросе URL и тело (JSON)
         response = self.session.post(url, json=booking_data)
         response.raise_for_status()
@@ -151,7 +151,7 @@ class APIClient:
 
     # Метод получения ID-шников броней:API - GetBookingIds
     def get_booking_ids(self, param=None):
-        url = f"{self.base_url}{Endpoints.BOOKING_ENDPOINT}"
+        url = f"{self.base_url}{Endpoints.BOOKING_ENDPOINT.value}"
         response = self.session.get(url, params=param)
         response.raise_for_status()
         # Проверяем статус код:Если не 200, то выводим сообщение с кодом ответа
@@ -174,7 +174,7 @@ class APIClient:
                 },
             "additionalneeds": "Breakfast"
         }
-        url = f"{self.base_url}{Endpoints.BOOKING_ENDPOINT}/:{booking_id}"
+        url = f"{self.base_url}{Endpoints.BOOKING_ENDPOINT.value}/:{booking_id}"
         response = self.session.put(url, params=payload)
         response.raise_for_status()
         # Проверяем статус код:Если не 200, то выводим сообщение с кодом ответа
@@ -189,7 +189,7 @@ class APIClient:
             "firstname": "James",
             "lastname": "Brown"
         }
-        url = f"{self.base_url}{Endpoints.BOOKING_ENDPOINT}/:{booking_id}"
+        url = f"{self.base_url}{Endpoints.BOOKING_ENDPOINT.value}/:{booking_id}"
         response = self.session.put(url, params=payload)
         response.raise_for_status()
         # Проверяем статус код:Если не 200, то выводим сообщение с кодом ответа
