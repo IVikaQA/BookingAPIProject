@@ -120,12 +120,17 @@ def test_create_booking(api_client, mocker, generate_random_booking_data, client
     }
 
     # Имитация метода POST для создания бронирования
-    mocker.patch.object(api_client.session, 'post', return_value=mock_response)
+    with allure.step('Проверяем вызов метода post с подготовленными данными'):
+        mocker.patch.object(api_client.session, 'post', return_value=mock_response)
 
     # Вызов метода создания бронирования
-    response = api_client.create_booking(payload_booking_data)
+    with allure.step('Проверяем вызов метода создания бронирования'):
+        response = api_client.create_booking(payload_booking_data)
 
     # Проверка содержимого ответа
-    assert response["bookingid"] == 1
-    assert response["firstname"] == payload_booking_data["firstname"]
-    assert response["lastname"] == payload_booking_data["lastname"]
+    with allure.step('Проверяем id бронирования'):
+        assert response["bookingid"] == 1
+    with allure.step('Проверяем, что переданное в запросе firstname совпадает с firstname в ответе'):
+        assert response["firstname"] == payload_booking_data["firstname"]
+    with allure.step('Проверяем, что переданное в запросе lastname совпадает с lastname в ответе'):
+        assert response["lastname"] == payload_booking_data["lastname"]
