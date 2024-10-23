@@ -9,7 +9,7 @@ import random
 @pytest.fixture(scope='session')
 def api_client():
     # Создаем объект класса APIClient
-    client = APIClient
+    client = APIClient()
     # Теперь нам доступны функции класса
     client.auth()
     return client
