@@ -109,3 +109,25 @@ def test_sozdanie_bronirovaniya_s_nepolnymi_dannymi(api_client, booking_dates):
     # В ответе на недостоющее переданное поле вернет слово error
     assert "firstname" in response.json()["error"]
     assert "lastname" in response.json()["error"]
+
+def test_sozdanie_bronirovaniya_s_pustym_JSON(api_client,booking_dates):
+    # Передаем пустой JSON
+    booking_data = {
+    }
+
+    #Выполняем запрос
+    response = api_client.create_booking(booking_data)
+
+def test_sozdanie_bronirovaniya_s_nevernymi_dannymi(api_client,booking_dates):
+    # Не передаю firstname, lastname
+    booking_data = {
+        "totalprice": "150",
+        "depositpaid": True,
+        "bookingdates": {
+            "checkin": booking_dates['checkin'],
+            "checkout": booking_dates['checkout']
+        },
+        "additionalneeds": "Dinner"
+    }
+
+    response = api_client.create_booking(booking_data)

@@ -34,32 +34,34 @@ def booking_dates():
 # Фикстура генерации случайных данных клиента
 @pytest.fixture()
 def generate_random_booking_data(booking_dates):
+    #Счетчик клиентов
+    i = 0
     #Будут созданы клиенты на русском, английском, китайском
-    list_locale = ['ru_RU', 'en_US', 'zh_CN']
     faker_ru = Faker(locale='ru_RU')
     faker_en = Faker(locale='en_US')
     faker_ch = Faker(locale='zh_CN')
+    #Кол-во клиентов
+    number_of_clients = i
 
     # Генерация данных для клиента 1 (русский)
     firstname_ru = faker_ru.first_name()
     lastname_ru = faker_ru.last_name()
     totalprice_ru = faker_ru.random_number(digits=3, fix_len=True)
     depositpaid_ru = faker_ru.boolean()
-    additionalneeds_ru = faker_ru.sentence()
+    i = i +1
 
     # Генерация данных для клиента 2 (китайский)
     firstname_ch = faker_ch.first_name()
     lastname_ch = faker_ch.last_name()
     totalprice_ch = faker_ch.random_number(digits=3, fix_len=True)
     depositpaid_ch = faker_ch.boolean()
-    additionalneeds_ch = faker_ch.sentence()
+    i = i + 1
 
     # Генерация данных для клиента 3 (английский)
     firstname_en = faker_en.first_name()
     lastname_en = faker_en.last_name()
     totalprice_en = faker_en.random_number(digits=3, fix_len=True)
     depositpaid_en = faker_en.boolean()
-    additionalneeds_en = faker_en.sentence()
 
     custom_words = ["cat", "dog", "bird", "fish", "mouse", "parrot"]
     sentence_length = random.randint(1, 3)
@@ -73,7 +75,7 @@ def generate_random_booking_data(booking_dates):
             "totalprice": totalprice_ru,
             "depositpaid": depositpaid_ru,
             "bookingdates": booking_dates,
-            "additionalneeds": additionalneeds,
+            "additionalneeds": additionalneeds
         },
         "client_2": {
             "firstname": firstname_ch,
@@ -92,6 +94,11 @@ def generate_random_booking_data(booking_dates):
             "additionalneeds": additionalneeds
         }
     }
-
+    count_clients = len(data)
     # Возвращаем этот словарь
     return data
+
+#Фикстура,которая возвращает длину данных их фикстуры генерации случайных данных клиента
+@pytest.fixture()
+def get_length_data(generate_random_booking_data):
+    return len(generate_random_booking_data)
