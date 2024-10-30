@@ -204,13 +204,5 @@ class APIClient:
             assert response.status_code == status_code, f'Expected status {status_code} but got {response.status_code}'
         return response.json()
 
-    # Метод для получения статуса ответа
-    def get_response_status_code(self, booking_id):
-        url = f"{self.base_url}{Endpoints.BOOKING_ENDPOINT.value}/{booking_id}"
-        # Используем сессию для запросов
-        response = self.session.get(url)
-        # Возвращаем только статус-код
-        return response.status_code
-
 
 
