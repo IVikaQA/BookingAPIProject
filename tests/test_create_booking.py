@@ -9,7 +9,7 @@ import time
 @allure.feature('Test creating booking')
 @allure.story('Positive:creating booking with custom data')
 def test_creating_booking_with_custom_data(api_client):
-    with allure.step('Готовим данные для запроса'):
+    with allure.step('Gotovim dannye dlya zaprosa'):
         booking_data = {
         "firstname" : "Ivan",
         "lastname" : "Ivanovich",
@@ -23,7 +23,7 @@ def test_creating_booking_with_custom_data(api_client):
         }
 
     #Отправили запрос с подготовленными данными с помощью метода - create_booking из api_client
-    with allure.step('Отправляем запррос с подготовленными данными с помощью метода - create_booking из api_client'):
+    with allure.step('Otpravlyaem zaprros s podgotovlennymi dannymi s pomoshchyu metoda - create_booking из api_client'):
         response = api_client.create_booking(booking_data)
         try:
             #Вызываем класс BookingResponse из файла booking.py и
@@ -43,7 +43,7 @@ def test_creating_booking_with_custom_data(api_client):
 @allure.feature('Test creating booking')
 @allure.story('Positive: creating booking with dynamic dates')
 def test_create_booking_with_dynamic_dates(api_client, booking_dates):
-    with allure.step('Готовим данные для запроса'):
+    with allure.step('Gotovim dannye dlya zaprosa'):
         booking_data = {
             "firstname": "Ivan",
             "lastname": "Ivanovich",
@@ -55,7 +55,7 @@ def test_create_booking_with_dynamic_dates(api_client, booking_dates):
             },
             "additionalneeds": "Dinner"
         }
-    with allure.step('Отправляем запррос с подготовленными данными с помощью метода - create_booking из api_client'):
+    with allure.step('Otpravlyaem zaprros s podgotovlennymi dannymi s pomoshchyu metoda - create_booking из api_client'):
         created_booking_response = api_client.create_booking(booking_data)
         # Проверка-1: Соответствует ли ответ API ожидаемой структуре и типам данных
         # Вызываем класс BookingResponse из файла booking.py и
@@ -91,7 +91,7 @@ def test_create_booking_with_dynamic_dates(api_client, booking_dates):
 @allure.story('Negative:Creating booking s nepolnymi dannymi')
 def test_sozdanie_bronirovaniya_s_nepolnymi_dannymi(api_client, booking_dates):
     # Не передаю firstname, lastname
-    with allure.step('Готовим данные для запроса:Не передаю firstname, lastname'):
+    with allure.step('Gotovim dannye dlya zaprosa:Ne peredayu firstname, lastname'):
         booking_data = {
             "totalprice": 150,
             "depositpaid": True,
@@ -101,7 +101,7 @@ def test_sozdanie_bronirovaniya_s_nepolnymi_dannymi(api_client, booking_dates):
             },
             "additionalneeds": "Dinner"
         }
-    with allure.step('Отправляем запррос с подготовленными данными с помощью метода - create_booking из api_client'):
+    with allure.step('Otpravlyaem zaprros s podgotovlennymi dannymi s pomoshchyu metoda - create_booking из api_client'):
         response = api_client.create_booking(booking_data)
 
     # Cервер вернет 400 Bad Request для неполных данных
@@ -114,19 +114,19 @@ def test_sozdanie_bronirovaniya_s_nepolnymi_dannymi(api_client, booking_dates):
 @allure.story('Negative:Creating booking s pustym JSON')
 def test_sozdanie_bronirovaniya_s_pustym_JSON(api_client,booking_dates):
     # Передаем пустой JSON
-    with allure.step('Готовим данные для запроса:Передаем пустой запрос JSON'):
+    with allure.step('Gotovim dannye dlya zaprosa:Peredaem pustoj zapros JSON'):
         booking_data = {
         }
 
     #Выполняем запрос
-    with allure.step('Отправляем запрос с пустым JSON с помощью метода - create_booking из api_client'):
+    with allure.step('Otpravlyaem zapros s pustym JSON s pomoshchyu metoda - create_booking из api_client'):
         response = api_client.create_booking(booking_data)
     #Какие то проверки
 
 @allure.feature('Test creating booking')
 @allure.story('Negative:Creating booking s nevernymi dannymi')
 def test_sozdanie_bronirovaniya_s_nevernymi_dannymi(api_client,booking_dates):
-    with allure.step('Готовим данные для запроса: В поле totalprice передаю строку вместо числа'):
+    with allure.step('Gotovim dannye dlya zaprosa: V pole totalprice peredayu stroku vmesto chisla'):
         booking_data = {
             "totalprice": "150",
             "depositpaid": True,
@@ -136,6 +136,8 @@ def test_sozdanie_bronirovaniya_s_nevernymi_dannymi(api_client,booking_dates):
             },
             "additionalneeds": "Dinner"
         }
-    with allure.step('Отправляем запрос с неверными данными: В поле totalprice кладем строку вместо числа с помощью метода - create_booking из api_client'):
+    with allure.step('Otpravlyaem zapros s nevernymi dannymi: '
+                     'V pole totalprice kladem stroku vmesto chisla s pomoshchyu metoda '
+                     '- create_booking iz api_client'):
         response = api_client.create_booking(booking_data)
         #Какие то проверки
