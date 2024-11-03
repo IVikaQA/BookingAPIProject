@@ -31,9 +31,7 @@ class APIClient:
         self.base_url = self.get_base_url(environment)
         # Чтобы сохранять сессию,пока выполняются запросы
         self.session = requests.Session()
-        self.session.headers = {
-            'Content-Type': 'application/json'
-        }
+
 
     # В функции вытаскиваются значения из файла .env
     # С помощью записи: -> str говорим о том,что тип возращаемого значения - строка
@@ -197,3 +195,14 @@ class APIClient:
             assert response.status_code == 200, f'Expected status 200 but got {response.status_code}'
         # В ответе возвращаем JSON,который мы будем в тесте по разному проверять.
         return response.json()
+
+    # Метод для получения информации о бронировании
+    def get_booking(self, booking_id, status_code=200):
+        url = f"{self.base_url}{Endpoints.BOOKING_ENDPOINT.value}/{booking_id}"  # Замените на правильный эндпоинт
+        response = self.session.get(url)  # Используем сессию для запросов
+        if status_code:
+            assert response.status_code == status_code, f'Expected status {status_code} but got {response.status_code}'
+        return response.json()
+
+
+
