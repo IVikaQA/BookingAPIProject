@@ -10,7 +10,7 @@ import requests
 def test_ping(api_client):
     # Фикстура api_client возвращает нам объект класса api_client
     # И значит нам доступны все методы класса api_client
-    with allure.step('Вызываем метод ApiClient:PING'):
+    with allure.step('Vyzyvaem metod ApiClient:PING'):
         status_code = api_client.ping()
     assert status_code == 201, f'Expected status 201 but got {status_code}'
 
@@ -20,7 +20,7 @@ def test_ping(api_client):
 # Проверяем кейс:Недоступность сервера
 @allure.story('Test server unavailability')
 def test_ping_server_unavailability(api_client, mocker):
-    with allure.step('Отправляем запрос и подменяем ответ,выбрасывая исключение:Server unavailability'):
+    with allure.step('Otpravlyaem zapros i podmenyaem otvet,vybrasyvaya isklyuchenie:Server unavailability'):
         mocker.patch.object(api_client.session, 'get', side_effect=Exception('Server unavailability'))
         with pytest.raises(Exception, match='Server unavailability'):
             api_client.ping()
@@ -35,7 +35,7 @@ def test_ping_server_unavailability(api_client, mocker):
 def test_ping_wrong_method(api_client, mocker):
     # Создаётся объект mock_response, который является мок-объектом,
     # созданным с помощью библиотеки mocker
-    with allure.step('Создаем объект класса Mock'):
+    with allure.step('Sozdaem obekt klassa Mock'):
         mock_response = mocker.Mock()
         # Устанавливается атрибут status_code этого мок-объекта на значение 405
         # Это означает, что когда в тесте будет вызван метод, который ожидает получить ответ от API,
@@ -44,7 +44,7 @@ def test_ping_wrong_method(api_client, mocker):
     # Эта строка используется для "замены" метода get объекта api_client на мок-объект.
     # Это значит, что когда в тестах вызывается api_client.get(),
     # вместо реального выполнения этого метода будет возвращено значение mock_response.
-    with allure.step('Подменяем запрос get, ниже, и заменяем статус-код ответа на 405'):
+    with allure.step('Podmenyaem zapros get, nizhe, i zamenyaem status-kod otveta na 405'):
         mocker.patch.object(api_client.session, 'get', return_value=mock_response)
         # Эта строка создает контекстный менеджер, который ожидает, что внутри
         # блока with будет выброшено исключение AssertionError. Если такое исключение
@@ -53,7 +53,7 @@ def test_ping_wrong_method(api_client, mocker):
         # что сообщение содержит текст 'Expected status code 201 but got 403'.
         # Это полезно для удостоверения, что код действительно вызывает ожидаемую ошибку в случае,
         # если статус-код ответа не соответствует ожидаемому.
-        with allure.step('Ожидаем выброса исключения AssertionError'):
+        with allure.step('Ozhidaem vybrosa isklyucheniya AssertionError'):
             with pytest.raises(AssertionError, match='Expected status 201 but got 405'):
                 # Это вызов метода ping у объекта api_client. Предполагается, что внутри этого метода происходит вызов get,
                 # который теперь замокирован и будет возвращать mock_response. Если mock_response имеет статус-код 405,
@@ -68,7 +68,7 @@ def test_ping_wrong_method(api_client, mocker):
 def test_ping_internal_server_error(api_client, mocker):
     mock_response = mocker.Mock()
     mock_response.status_code = 500
-    with allure.step('Подменяем запрос get, ниже, и заменяем статус-код ответа на 500'):
+    with allure.step('Podmenyaem zapros get, nizhe, i zamenyaem status-kod otveta na 500'):
         mocker.patch.object(api_client.session, 'get', return_value=mock_response)
         with allure.step('Ожидаем выброса исключения AssertionError'):
             with pytest.raises(AssertionError, match='Expected status 201 but got 500'):
@@ -82,9 +82,9 @@ def test_ping_internal_server_error(api_client, mocker):
 def test_ping_wrong_url(api_client, mocker):
     mock_response = mocker.Mock()
     mock_response.status_code = 404
-    with allure.step('Подменяем запрос get, ниже, и заменяем статус-код ответа на 404'):
+    with allure.step('Podmenyaem zapros get, nizhe, i zamenyaem status-kod otveta na 404'):
         mocker.patch.object(api_client.session, 'get', return_value=mock_response)
-        with allure.step('Ожидаем выброса исключения AssertionError'):
+        with allure.step('Ozhidaem vybrosa isklyucheniya AssertionError'):
             with pytest.raises(AssertionError, match='Expected status 201 but got 404'):
                 api_client.ping()
 
@@ -96,9 +96,9 @@ def test_ping_wrong_url(api_client, mocker):
 def test_ping_internal_server_error(api_client, mocker):
     mock_response = mocker.Mock()
     mock_response.status_code = 200
-    with allure.step('Подменяем запрос get, ниже, и заменяем статус-код ответа на 200'):
+    with allure.step('Podmenyaem zapros get, nizhe, i zamenyaem status-kod otveta na 200'):
         mocker.patch.object(api_client.session, 'get', return_value=mock_response)
-        with allure.step('Ожидаем выброса исключения AssertionError'):
+        with allure.step('Ozhidaem vybrosa isklyucheniya AssertionError'):
             with pytest.raises(AssertionError, match='Expected status 201 but got 200'):
                 api_client.ping()
 
@@ -108,9 +108,9 @@ def test_ping_internal_server_error(api_client, mocker):
 @allure.feature('Test ping')
 @allure.story('Test timeout')
 def test_ping_timeout(api_client, mocker):
-    with allure.step('Подменяем запрос get:Используем Timeout'):
+    with allure.step('Podmenyaem zapros get:Ispolzuem Timeout'):
         mocker.patch.object(api_client.session, 'get', side_effect=requests.Timeout)
-        with allure.step('Выбрасываю исключение по Timeout'):
+        with allure.step('Vybrasyvayu isklyuchenie po Timeout'):
             with pytest.raises(requests.Timeout):
                 api_client.ping()
 
@@ -122,11 +122,11 @@ def test_ping_timeout(api_client, mocker):
 @pytest.mark.parametrize("client_key", ["client_1", "client_2", "client_3"])
 def test_create_booking(api_client, mocker, generate_random_booking_data, client_key):
     # Используем данные из фикстуры для конкретного клиента
-    with allure.step('Используем данные из фикстуры generate_random_booking_data для генерации клиента'):
+    with allure.step('Ispolzuem dannye iz fikstury generate_random_booking_data dlya generacii klienta'):
         payload_booking_data = generate_random_booking_data[client_key]
 
     # Создание имитации успешного ответа от API
-    with allure.step('Создание имитации успешного ответа от API'):
+    with allure.step('Sozdanie imitacii uspeshnogo otveta ot API'):
         mock_response = mocker.Mock()
         mock_response.status_code = 201
         mock_response.json.return_value = {
@@ -136,17 +136,17 @@ def test_create_booking(api_client, mocker, generate_random_booking_data, client
         }
 
     # Имитация метода POST для создания бронирования
-    with allure.step('Проверяем вызов метода post с подготовленными данными'):
+    with allure.step('Proveryaem vyzov metoda post s podgotovlennymi dannymi'):
         mocker.patch.object(api_client.session, 'post', return_value=mock_response)
 
     # Вызов метода создания бронирования
-    with allure.step('Проверяем вызов метода создания бронирования'):
+    with allure.step('Proveryaem vyzov metoda sozdaniya bronirovaniya'):
         response = api_client.create_booking(payload_booking_data)
 
     # Проверка содержимого ответа
-    with allure.step('Проверяем id бронирования'):
+    with allure.step('Proveryaem id bronirovaniya'):
         assert response["bookingid"] == 1
-    with allure.step('Проверяем, что переданное в запросе firstname совпадает с firstname в ответе'):
+    with allure.step('Proveryaem, chto peredannoe v zaprose firstname sovpadaet s firstname v otvete'):
         assert response["firstname"] == payload_booking_data["firstname"]
-    with allure.step('Проверяем, что переданное в запросе lastname совпадает с lastname в ответе'):
+    with allure.step('Proveryaem, chto peredannoe v zaprose lastname sovpadaet s lastname v otvete'):
         assert response["lastname"] == payload_booking_data["lastname"]
