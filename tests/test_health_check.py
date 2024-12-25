@@ -148,5 +148,5 @@ def test_create_booking(api_client, mocker, generate_random_booking_data, client
         assert response["bookingid"] == 1
     with allure.step('Proveryaem, chto peredannoe v zaprose firstname sovpadaet s firstname v otvete'):
         assert response["firstname"] == payload_booking_data["firstname"]
-    with allure.step('Proveryaem, chto peredannoe v zapross lastname sovpadaet s lastname v otvete'):
+    with allure.step('Proveryaem, chto peredannoe v zapros lastname sovpadaet s lastname v otvete'):
         assert response["lastname"] == payload_booking_data["lastname"]
