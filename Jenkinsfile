@@ -9,14 +9,14 @@ pipeline {
                 sh '. venv/bin/activate'
 
                 // Установка зависимостей из requirements.txt
-                sh 'pip install -r requirements.txt --break-system-packages'
+                sh 'venv/bin/pip install -r requirements.txt --break-system-packages'
             }
         }
 
         stage('Run Tests') {
             steps {
                 // Запуск тестов и генерация отчета allure
-                sh 'python3 -m pytest --alluredir allure-results'
+                sh 'venv/bin/python3 -m pytest --alluredir allure-results'
             }
         }
 
@@ -30,18 +30,17 @@ pipeline {
                 ])
             }
         }
+    }
 
-        post {
-            always {
-                 // Сохранение отчетов о тестировании и любых других артефактов
-                archiveArtifacts artifacts: '**/allure-results/**',
-                allowEmptyArchive: true
-            }
+    post {
+        always {
+            // Сохранение отчетов о тестировании и любых других артефактов
+            archiveArtifacts artifacts: '**/allure-results/**', allowEmptyArchive: true
+        }
 
-            failure {
-                    // Если сборка провалилась, отправить уведомление или выполнить другое действие
-                    echo 'The build failed!'
-            }
+        failure {
+            // Если сборка провалилась, отправить уведомление или выполнить другое действие
+            echo 'The build failed!'
         }
     }
 }
